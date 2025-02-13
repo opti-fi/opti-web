@@ -65,7 +65,7 @@ export const useGenerateAI = () => {
           })
         );
 
-        const response = await apiAgent.post("generate-risk-profile", { data: formattedSubmission });
+        const response = await apiAgent.post("action/generate-risk-profile", { data: formattedSubmission });
         setRisk(response.risk);
 
         setSteps((prev) =>
