@@ -2,7 +2,6 @@ import { dataClassify } from "@/data/dataClassify";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import apiAgent from "@/lib/api-agent";
-import React from "react";
 import { ADDRESS_AVS } from "@/lib/constants";
 import { AVSAbi } from "@/lib/abis/AVSAbi";
 import { walletClient } from "@/lib/client";
@@ -10,27 +9,15 @@ import { useAccount } from "wagmi";
 import { baseSepolia } from "viem/chains";
 import { encodeFunctionData } from "viem";
 import { useStaking } from "@/hooks/query/useStaking";
+import useGenerateContent from "@/hooks/query/api/useGeneratedContent";
 
 type Status = "idle" | "loading" | "success" | "error";
 
 export const useGenerateAI = () => {
   const { address } = useAccount()
-    const { sData } = useStaking();
+  const { sData } = useStaking();
 
-  const [risk, setRisk] = React.useState<string | null>(null);
-  const [protocolId, setProtocolId] = React.useState<string | null>(null);
-
-  React.useEffect(() => {
-    const storedRisk = localStorage.getItem("risk");
-    if (risk && !storedRisk) {
-      localStorage.setItem("risk", JSON.stringify(risk));
-    }
-
-    const storedProtocolId = localStorage.getItem("protocolId");
-    if (protocolId && !storedProtocolId) {
-      localStorage.setItem("protocolId", JSON.stringify(protocolId));
-    }
-  }, [risk, protocolId]);
+  const { risk, setRisk, protocolId, setProtocolId } = useGenerateContent();
 
   const [steps, setSteps] = useState<
     Array<{
@@ -97,13 +84,13 @@ export const useGenerateAI = () => {
           let findStaking = sData?.find((item) => {
             return item.idProtocol?.trim() === response.response[0]?.id_project.replace(/"/g, "")
           });
-      
+
           if (!findStaking) {
             findStaking = sData?.find((item) => {
               return item.nameToken?.trim() === response.response[0]?.id_project.replace(/"/g, "")
             })
           }
-  
+
           console.log("findStaking", findStaking);
 
           if (response.response[0]?.id_project) {

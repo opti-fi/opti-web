@@ -8,10 +8,10 @@ import GeneratedContent from "./GeneratedContent";
 import { useAccount } from "wagmi";
 import { useAddressAI } from "@/hooks/query/useAddressAI";
 import Loading from "@/components/loader/loading";
+import useGenerateContent from "@/hooks/query/api/useGeneratedContent";
 
 const GenerateComponent: React.FC = () => {
-  const risk = localStorage.getItem("risk");
-  const protocolId = localStorage.getItem("protocolId");
+  const { risk, protocolId } = useGenerateContent();
 
   const { isConnected } = useAccount();
   const { addressAI, laAI } = useAddressAI();
