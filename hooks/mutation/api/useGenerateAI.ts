@@ -9,11 +9,13 @@ import { walletClient } from "@/lib/client";
 import { useAccount } from "wagmi";
 import { baseSepolia } from "viem/chains";
 import { encodeFunctionData } from "viem";
+import { useStaking } from "@/hooks/query/useStaking";
 
 type Status = "idle" | "loading" | "success" | "error";
 
 export const useGenerateAI = () => {
   const { address } = useAccount()
+    const { sData } = useStaking();
 
   const [risk, setRisk] = React.useState<string | null>(null);
   const [protocolId, setProtocolId] = React.useState<string | null>(null);
@@ -92,6 +94,18 @@ export const useGenerateAI = () => {
         if (matchingClassification) {
           const response = await apiAgent.post("query", { query: matchingClassification.prompt });
 
+          let findStaking = sData?.find((item) => {
+            return item.idProtocol?.trim() === response.response[0]?.id_project.replace(/"/g, "")
+          });
+      
+          if (!findStaking) {
+            findStaking = sData?.find((item) => {
+              return item.nameToken?.trim() === response.response[0]?.id_project.replace(/"/g, "")
+            })
+          }
+  
+          console.log("findStaking", findStaking);
+
           if (response.response[0]?.id_project) {
             try {
               await walletClient.switchChain({ id: baseSepolia.id });
@@ -101,7 +115,7 @@ export const useGenerateAI = () => {
                 data: encodeFunctionData({
                   abi: AVSAbi,
                   functionName: "taskAgent",
-                  args: [response.response[0]?.id_project]
+                  args: [findStaking?.idProtocol]
                 }),
                 account: address as HexAddress,
                 chain: baseSepolia

@@ -66,6 +66,8 @@ export default function GeneratedContent({
     }, {
       onSuccess: () => {
         setIsModalTransactionOpen(true);
+        
+        setTimeout(() => (window.location.reload()), 5000);
       }
     })
   }
