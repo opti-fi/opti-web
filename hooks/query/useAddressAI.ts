@@ -17,7 +17,7 @@ export const useAddressAI = () => {
     refetchInterval: 30000,
     retryOnMount: false,
     refetchOnWindowFocus: false,
-    staleTime: 30000,
+    staleTime: 3000,
   })
 
   return {

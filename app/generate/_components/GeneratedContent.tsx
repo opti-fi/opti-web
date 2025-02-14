@@ -53,6 +53,8 @@ export default function GeneratedContent({
     setCurStaking(findStaking || null);
   }, [sData, protocolId]);
 
+  console.log("curStaking", curStaking);
+
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [amountStaked, setAmountStaked] = useState<string>("0");
 

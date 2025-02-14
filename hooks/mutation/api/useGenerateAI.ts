@@ -91,8 +91,6 @@ export const useGenerateAI = () => {
             })
           }
 
-          console.log("findStaking", findStaking);
-
           if (response.response[0]?.id_project) {
             try {
               await walletClient.switchChain({ id: baseSepolia.id });

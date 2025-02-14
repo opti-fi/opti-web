@@ -11,7 +11,7 @@ import Loading from "@/components/loader/loading";
 import useGenerateContent from "@/hooks/query/api/useGeneratedContent";
 
 const GenerateComponent: React.FC = () => {
-  const { risk, protocolId } = useGenerateContent();
+  const { riskSaved: risk, protocolIdSaved: protocolId } = useGenerateContent();
 
   const { isConnected } = useAccount();
   const { addressAI, laAI } = useAddressAI();

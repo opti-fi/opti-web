@@ -2,14 +2,12 @@ import React from 'react';
 
 const useGenerateContent = () => {
   const [risk, setRisk] = React.useState<string | null>(null);
+  const [riskSaved, setRiskSaved] = React.useState<string | null>(null);
   const [protocolId, setProtocolId] = React.useState<string | null>(null);
+  const [protocolIdSaved, setProtocolIdSaved] = React.useState<string | null>(null);
 
   const setItemWithExpiry = (key: string, value: string) => {
-    const item = {
-      value: value,
-      timestamp: new Date().getTime()
-    };
-    localStorage.setItem(key, JSON.stringify(item));
+    localStorage.setItem(key, value);
   };
 
   const getItemWithExpiry = (key: string) => {
@@ -39,12 +37,24 @@ const useGenerateContent = () => {
     const cleanup = setInterval(() => {
       getItemWithExpiry("risk");
       getItemWithExpiry("protocolId");
-    }, 60000); // Check every minute
+    }, 60000);
 
     return () => clearInterval(cleanup);
   }, [risk, protocolId]);
 
-  return { risk, setRisk, protocolId, setProtocolId };
+  React.useEffect(() => {
+    const risk = localStorage.getItem("risk");
+    if (risk) {
+      setRiskSaved(risk);
+    }
+
+    const protocolId = localStorage.getItem("protocolId");
+    if (protocolId) {
+      setProtocolIdSaved(protocolId);
+    }
+  }, []);
+
+  return { risk, setRisk, protocolId, setProtocolId, riskSaved, protocolIdSaved };
 };
 
 export default useGenerateContent;
